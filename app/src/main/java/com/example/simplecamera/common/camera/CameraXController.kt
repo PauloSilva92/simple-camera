@@ -8,13 +8,14 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.example.simplecamera.common.file.FileUtils
 import com.google.common.util.concurrent.ListenableFuture
-import java.io.File
 
 class CameraXController(
     private val cameraPreview: PreviewView,
     private val context: Context,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val fileUtils: FileUtils
 ) : CameraController {
 
 
@@ -45,20 +46,9 @@ class CameraXController(
     }
 
 
-    // TODO(refactor this file handling)
     override fun takePhoto() {
-        val outPutFileDirName =
-            context.filesDir.absolutePath + File.separator + "my_photos" + File.separator
-        val dir = File(outPutFileDirName)
-        dir.mkdir()
-        val outPutFileName = outPutFileDirName + System.currentTimeMillis().toString() + ".jpg"
 
-        val outPutFile = File(outPutFileName)
-        val outputFileOptions = ImageCapture.OutputFileOptions
-            .Builder(
-                outPutFile
-            )
-            .build()
+        val outputFileOptions = fileUtils.createOutputFileOptions()
 
         imageCapture.takePicture(
             outputFileOptions,
@@ -88,14 +78,11 @@ class CameraXController(
         cameraProviderFuture.addListener({
             cameraProvider = cameraProviderFuture.get()
             bindPreview(cameraProvider)
-
         }, ContextCompat.getMainExecutor(context))
     }
 
     private fun bindPreview(cameraProvider: ProcessCameraProvider) {
         preview.setSurfaceProvider(cameraPreview.surfaceProvider)
-
-
         camera =
             cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, imageCapture)
     }

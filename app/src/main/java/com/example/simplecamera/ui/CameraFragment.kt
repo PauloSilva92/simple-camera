@@ -10,27 +10,31 @@ import androidx.fragment.app.Fragment
 import com.example.simplecamera.R
 import com.example.simplecamera.common.camera.CameraController
 import com.example.simplecamera.common.camera.CameraXController
+import com.example.simplecamera.common.file.FileUtils
 import com.example.simplecamera.common.peermission.PermissionRequester
 
 
 class CameraFragment : Fragment(R.layout.fragment_camera) {
 
-    private lateinit var cameraPreview: PreviewView
-    private lateinit var takePictureButton: AppCompatImageView
-    private lateinit var toggleFlashButton: AppCompatImageView
-
     private lateinit var cameraController: CameraController
     private lateinit var permissionRequester: PermissionRequester
+    private lateinit var fileUtils: FileUtils
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        cameraPreview = view.findViewById(R.id.camera_preview)
-        takePictureButton = view.findViewById(R.id.take_picture_button)
-        toggleFlashButton = view.findViewById(R.id.toggle_flash_button)
+        val cameraPreview: PreviewView = view.findViewById(R.id.camera_preview)
+        val takePictureButton: AppCompatImageView = view.findViewById(R.id.take_picture_button)
+        val toggleFlashButton: AppCompatImageView = view.findViewById(R.id.toggle_flash_button)
 
+        fileUtils = FileUtils(requireContext())
 
-        cameraController = CameraXController(cameraPreview, requireContext(), this)
+        cameraController = CameraXController(
+            cameraPreview,
+            requireContext(),
+            this,
+            fileUtils
+        )
 
 
         permissionRequester = PermissionRequester(requireActivity())

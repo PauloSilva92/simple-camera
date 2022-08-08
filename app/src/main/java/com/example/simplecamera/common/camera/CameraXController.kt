@@ -1,23 +1,22 @@
 package com.example.simplecamera.common.camera
 
-import android.content.Context
-import android.view.Surface
+import android.Manifest
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
+import androidx.fragment.app.FragmentActivity
 import com.example.simplecamera.common.file.FileUtils
+import com.example.simplecamera.common.peermission.PermissionRequester
 import com.google.common.util.concurrent.ListenableFuture
 
 class CameraXController(
     private val cameraPreview: PreviewView,
-    private val context: Context,
-    private val lifecycleOwner: LifecycleOwner,
-    private val fileUtils: FileUtils
+    private val activity: FragmentActivity,
+    private val fileUtils: FileUtils,
+    private val permissionRequester: PermissionRequester
 ) : CameraController {
-
 
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private lateinit var cameraProvider: ProcessCameraProvider
@@ -31,14 +30,17 @@ class CameraXController(
 
 
     override fun start() {
-
-        imageCapture = ImageCapture.Builder()
-            .setTargetRotation(Surface.ROTATION_90)
-            .build()
-
-        cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-
-        configCameraPreview()
+        permissionRequester.request(
+            Manifest.permission.CAMERA,
+            {
+                imageCapture = ImageCapture.Builder().build()
+                cameraProviderFuture = ProcessCameraProvider.getInstance(activity)
+                configCameraPreview()
+            },
+            {
+                Toast.makeText(activity, "Didn't work =/", Toast.LENGTH_SHORT).show()
+            }
+        )
     }
 
     override fun stop() {
@@ -52,15 +54,15 @@ class CameraXController(
 
         imageCapture.takePicture(
             outputFileOptions,
-            ContextCompat.getMainExecutor(context),
+            ContextCompat.getMainExecutor(activity),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    Toast.makeText(context, "Image saved", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Image saved", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onError(exception: ImageCaptureException) {
                     exception.printStackTrace()
-                    Toast.makeText(context, "Image not saved", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Image not saved", Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -78,13 +80,13 @@ class CameraXController(
         cameraProviderFuture.addListener({
             cameraProvider = cameraProviderFuture.get()
             bindPreview(cameraProvider)
-        }, ContextCompat.getMainExecutor(context))
+        }, ContextCompat.getMainExecutor(activity))
     }
 
     private fun bindPreview(cameraProvider: ProcessCameraProvider) {
         preview.setSurfaceProvider(cameraPreview.surfaceProvider)
         camera =
-            cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, imageCapture)
+            cameraProvider.bindToLifecycle(activity, cameraSelector, preview, imageCapture)
     }
 
 

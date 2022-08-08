@@ -1,4 +1,4 @@
-package com.example.simplecamera.common.peermission
+package com.example.simplecamera.common.permission
 
 import android.content.pm.PackageManager
 import androidx.activity.result.contract.ActivityResultContracts

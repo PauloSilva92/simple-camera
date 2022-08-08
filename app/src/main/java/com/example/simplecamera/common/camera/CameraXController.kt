@@ -8,7 +8,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.example.simplecamera.common.file.FileUtils
-import com.example.simplecamera.common.peermission.PermissionRequester
+import com.example.simplecamera.common.permission.PermissionRequester
 import com.google.common.util.concurrent.ListenableFuture
 
 class CameraXController(

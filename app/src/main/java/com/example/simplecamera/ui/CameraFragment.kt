@@ -7,7 +7,7 @@ import androidx.camera.view.PreviewView
 import androidx.fragment.app.Fragment
 import com.example.simplecamera.R
 import com.example.simplecamera.common.camera.CameraController
-import com.example.simplecamera.common.depedencyinjection.AppComposition
+import com.example.simplecamera.common.dependencyinjection.AppComposition
 
 
 class CameraFragment : Fragment(R.layout.fragment_camera) {

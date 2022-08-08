@@ -15,6 +15,13 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     private lateinit var cameraController: CameraController
     private lateinit var appComposition: AppComposition
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        appComposition = AppComposition(requireActivity())
+    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -22,9 +29,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         val takePictureButton: AppCompatImageView = view.findViewById(R.id.take_picture_button)
         val toggleFlashButton: AppCompatImageView = view.findViewById(R.id.toggle_flash_button)
 
-        appComposition = AppComposition(requireActivity())
         cameraController = appComposition.cameraController(cameraPreview)
-
         cameraController.start()
 
         takePictureButton.setOnClickListener {

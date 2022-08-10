@@ -2,6 +2,7 @@ package com.example.simplecamera.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.camera.view.PreviewView
 import androidx.fragment.app.Fragment
@@ -26,7 +27,13 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         cameraController.start(cameraPreview)
 
         takePictureButton.setOnClickListener {
-            cameraController.takePhoto()
+            cameraController.takePhoto(
+                onSuccess = { photoUri ->
+                    Toast.makeText(requireContext(), "Image saved: $photoUri", Toast.LENGTH_SHORT)
+                        .show()
+                },
+                onError = { exception: Throwable -> exception.printStackTrace() }
+            )
         }
 
         toggleFlashButton.setOnClickListener {

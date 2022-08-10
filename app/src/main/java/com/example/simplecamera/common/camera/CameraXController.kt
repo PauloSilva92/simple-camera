@@ -1,6 +1,7 @@
 package com.example.simplecamera.common.camera
 
 import android.Manifest
+import android.net.Uri
 import android.view.View
 import android.widget.Toast
 import androidx.camera.core.*
@@ -55,7 +56,10 @@ class CameraXController @Inject constructor(
     }
 
 
-    override fun takePhoto() {
+    override fun takePhoto(
+        onSuccess: (photoUri: Uri?) -> Unit,
+        onError: (exception: Throwable) -> Unit
+    ) {
 
         val outputFileOptions = fileUtils.createOutputFileOptions()
 
@@ -64,12 +68,11 @@ class CameraXController @Inject constructor(
             ContextCompat.getMainExecutor(activity),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    Toast.makeText(activity, "Image saved", Toast.LENGTH_SHORT).show()
+                    onSuccess(outputFileResults.savedUri)
                 }
 
                 override fun onError(exception: ImageCaptureException) {
-                    exception.printStackTrace()
-                    Toast.makeText(activity, "Image not saved", Toast.LENGTH_SHORT).show()
+                    onError(exception)
                 }
 
             }

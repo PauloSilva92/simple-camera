@@ -7,8 +7,6 @@ import androidx.camera.view.PreviewView
 import androidx.fragment.app.Fragment
 import com.example.simplecamera.R
 import com.example.simplecamera.common.camera.CameraController
-import com.example.simplecamera.common.file.FileUtils
-import com.example.simplecamera.common.permission.PermissionRequester
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -17,11 +15,6 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     @Inject
     lateinit var cameraController: CameraController
-    @Inject
-    lateinit var permissionRequester: PermissionRequester
-    @Inject
-    lateinit var fileUtils: FileUtils
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

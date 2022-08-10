@@ -7,19 +7,20 @@ import androidx.camera.view.PreviewView
 import androidx.fragment.app.Fragment
 import com.example.simplecamera.R
 import com.example.simplecamera.common.camera.CameraController
-import com.example.simplecamera.common.dependencyinjection.AppComposition
+import com.example.simplecamera.common.file.FileUtils
+import com.example.simplecamera.common.permission.PermissionRequester
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class CameraFragment : Fragment(R.layout.fragment_camera) {
 
-    private lateinit var cameraController: CameraController
-    private lateinit var appComposition: AppComposition
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        appComposition = AppComposition(requireActivity())
-    }
+    @Inject
+    lateinit var cameraController: CameraController
+    @Inject
+    lateinit var permissionRequester: PermissionRequester
+    @Inject
+    lateinit var fileUtils: FileUtils
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,8 +30,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         val takePictureButton: AppCompatImageView = view.findViewById(R.id.take_picture_button)
         val toggleFlashButton: AppCompatImageView = view.findViewById(R.id.toggle_flash_button)
 
-        cameraController = appComposition.cameraController(cameraPreview)
-        cameraController.start()
+        cameraController.start(cameraPreview)
 
         takePictureButton.setOnClickListener {
             cameraController.takePhoto()
@@ -38,8 +38,6 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
 
         toggleFlashButton.setOnClickListener {
             cameraController.toggleTorch()
-
-
         }
     }
 }

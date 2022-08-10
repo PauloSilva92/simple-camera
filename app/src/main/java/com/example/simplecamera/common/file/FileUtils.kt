@@ -3,8 +3,9 @@ package com.example.simplecamera.common.file
 import android.content.Context
 import androidx.camera.core.ImageCapture
 import java.io.File
+import javax.inject.Inject
 
-class FileUtils(
+class FileUtils @Inject constructor(
     private val context: Context
 ) {
 

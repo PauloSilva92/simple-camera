@@ -3,8 +3,9 @@ package com.example.simplecamera.common.permission
 import android.content.pm.PackageManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.FragmentActivity
+import javax.inject.Inject
 
-class PermissionRequester(
+class PermissionRequester @Inject constructor(
     private val activity: FragmentActivity
 ) {
 

@@ -1,6 +1,7 @@
 package com.example.simplecamera.common.camera
 
 import android.Manifest
+import android.view.View
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -10,9 +11,9 @@ import androidx.fragment.app.FragmentActivity
 import com.example.simplecamera.common.file.FileUtils
 import com.example.simplecamera.common.permission.PermissionRequester
 import com.google.common.util.concurrent.ListenableFuture
+import javax.inject.Inject
 
-class CameraXController(
-    private val cameraPreview: PreviewView,
+class CameraXController @Inject constructor(
     private val activity: FragmentActivity,
     private val fileUtils: FileUtils,
     private val permissionRequester: PermissionRequester
@@ -22,6 +23,7 @@ class CameraXController(
     private lateinit var cameraProvider: ProcessCameraProvider
     private lateinit var camera: Camera
     private lateinit var imageCapture: ImageCapture
+    private lateinit var cameraPreview: PreviewView
 
     private var torchEnabled = false
 
@@ -29,7 +31,12 @@ class CameraXController(
     private val preview = Preview.Builder().build()
 
 
-    override fun start() {
+    override fun <T : View> start(previewView: T) {
+        if (previewView !is PreviewView) {
+            throw PreviewTypeMismatch("Preview type is not a PreviewView")
+        }
+
+        cameraPreview = previewView
         permissionRequester.request(
             Manifest.permission.CAMERA,
             {
@@ -89,5 +96,6 @@ class CameraXController(
             cameraProvider.bindToLifecycle(activity, cameraSelector, preview, imageCapture)
     }
 
-
 }
+
+class PreviewTypeMismatch(exception: String) : RuntimeException(exception)

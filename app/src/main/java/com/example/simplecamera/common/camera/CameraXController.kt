@@ -52,7 +52,7 @@ class CameraXController @Inject constructor(
     }
 
     override fun stop() {
-
+        cameraProvider.unbindAll()
     }
 
 

@@ -3,7 +3,6 @@ package com.example.simplecamera.ui
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.camera.view.PreviewView
 import androidx.fragment.app.Fragment
@@ -32,9 +31,6 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         takePictureButton.setOnClickListener {
             cameraController.takePhoto(
                 onSuccess = { photoUri ->
-                    Toast.makeText(requireContext(), "Image saved: $photoUri", Toast.LENGTH_SHORT)
-                        .show()
-
                     picturePreview.loadImage(photoUri)
 
                     picturePreview.setOnClickListener {
@@ -52,6 +48,11 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         toggleFlashButton.setOnClickListener {
             cameraController.toggleTorch()
         }
+    }
+
+    override fun onStop() {
+        cameraController.stop()
+        super.onStop()
     }
 
     private fun AppCompatImageView.loadImage(uri: Uri?) {

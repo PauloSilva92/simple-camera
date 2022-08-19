@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.simplecamera.R
 import com.example.simplecamera.common.camera.CameraController
+import com.example.simplecamera.common.camera.FlashState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -38,15 +39,19 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
                             CameraFragmentDirections.actionCameraFragmentToPictureFragment(photoUri!!)
                         )
                     }
-
-
                 },
                 onError = { exception: Throwable -> exception.printStackTrace() }
             )
         }
 
         toggleFlashButton.setOnClickListener {
-            cameraController.toggleTorch()
+            cameraController.toggleTorch { flashState ->
+                when (flashState) {
+                    FlashState.ON -> toggleFlashButton.setImageResource(R.drawable.ic_flash_on)
+                    FlashState.OFF -> toggleFlashButton.setImageResource(R.drawable.ic_flash_off)
+                    FlashState.AUTO -> toggleFlashButton.setImageResource(R.drawable.ic_flash_auto)
+                }
+            }
         }
     }
 

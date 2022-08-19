@@ -80,9 +80,17 @@ class CameraXController @Inject constructor(
         )
     }
 
-    override fun toggleTorch() {
+    override fun toggleTorch(toggleCallback: (flashState: FlashState) -> Unit) {
         torchEnabled = !torchEnabled
         camera.cameraControl.enableTorch(torchEnabled)
+
+        val flashState = if (torchEnabled) {
+            FlashState.ON
+        } else {
+            FlashState.OFF
+        }
+
+        toggleCallback(flashState)
     }
 
 

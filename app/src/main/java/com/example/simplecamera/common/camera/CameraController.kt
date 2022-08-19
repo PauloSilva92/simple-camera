@@ -7,5 +7,5 @@ interface CameraController {
     fun <T : View> start(previewView: T)
     fun stop()
     fun takePhoto(onSuccess: (photoUri: Uri?) -> Unit, onError: (exception: Throwable) -> Unit)
-    fun toggleTorch()
+    fun toggleTorch(toggleCallback: (flashState: FlashState) -> Unit)
 }

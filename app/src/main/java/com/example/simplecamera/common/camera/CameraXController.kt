@@ -9,14 +9,13 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import com.example.simplecamera.common.file.FileUtils
 import com.example.simplecamera.common.permission.PermissionRequester
 import com.google.common.util.concurrent.ListenableFuture
 import javax.inject.Inject
 
 class CameraXController @Inject constructor(
     private val activity: FragmentActivity,
-    private val fileUtils: FileUtils,
+    private val cameraFileHandler: CameraFileHandler,
     private val permissionRequester: PermissionRequester
 ) : CameraController {
 
@@ -61,7 +60,7 @@ class CameraXController @Inject constructor(
         onError: (exception: Throwable) -> Unit
     ) {
 
-        val outputFileOptions = fileUtils.createOutputFileOptions()
+        val outputFileOptions = cameraFileHandler.createOutputFileOptions()
 
         imageCapture.takePicture(
             outputFileOptions,
